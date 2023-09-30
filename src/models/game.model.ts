@@ -28,7 +28,6 @@ const gameSchema: Schema = new Schema<IGame>(
     description: { type: String, required: true },
     rating: { type: String, required: true },
     tagArray: { type: [String], required: false, default: [] },
-
     seriesId: { type: Schema.Types.ObjectId, ref: "Series" },
     imageUrl: { type: String, required: true, default: "" },
   },

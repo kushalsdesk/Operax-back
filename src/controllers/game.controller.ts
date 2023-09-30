@@ -15,3 +15,25 @@ export const getGames = async (
     console.log("Error while retrieving games", err.message);
   }
 };
+
+export const createGames = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      title,
+      genre,
+      platform,
+      releaseYear,
+      developer,
+      publisher,
+      description,
+      rating,
+      tagString,
+      seriesName,
+    } = req.body;
+  } catch (err) {
+    console.log("Error while creating games", err.message);
+  }
+};

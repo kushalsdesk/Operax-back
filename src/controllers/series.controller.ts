@@ -32,6 +32,7 @@ export const createSeries = async (
 export const getSeriesByName = async (req: Request, res: Response) => {
   try {
     const { title } = req.params;
+    console.log(title);
 
     // Find the series by title in the MongoDB collection
     const series = await Series.findOne({ title }).exec();
@@ -55,5 +56,37 @@ export const getSeriesByName = async (req: Request, res: Response) => {
       success: false,
       message: "Error while retrieving series",
     });
+  }
+};
+
+export const getGamesBySeriesId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response> => {
+  try {
+    const { seriesId } = req.params;
+    const series = await Series.findById(seriesId).exec();
+
+    if (!series) {
+      return res.status(404).send({
+        success: false,
+        message: "Series not found",
+      });
+    }
+
+    const gameIds = series.games;
+    const games = await Game.find({ _id: { $in: gameIds } })
+      .sort({ releaseYear: 1 })
+      .exec();
+
+    return res.status(200).send({
+      success: true,
+      message: "Games retrieved",
+      seriesName: series.title,
+      games,
+    });
+  } catch (err) {
+    console.log("Error while retrieving games", err.message);
   }
 };

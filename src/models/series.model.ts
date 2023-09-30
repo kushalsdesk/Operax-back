@@ -6,10 +6,10 @@ export interface ISeries extends Document {
   games: Array<IGame["_id"]>;
 }
 
-const seriesSchema: Schema = new Schema(
+const seriesSchema: Schema = new Schema<ISeries>(
   {
     title: { type: String, required: true },
-    games: [{ type: Schema.Types.ObjectId, ref: "Game" }],
+    games: [{ type: Schema.Types.ObjectId, ref: "Games" }],
   },
   {
     timestamps: false,

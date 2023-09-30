@@ -3,13 +3,14 @@ import {
   getSeries,
   createSeries,
   getSeriesByName,
+  getGamesBySeriesId,
 } from "../controllers/series.controller";
-import bodyParser from "body-parser";
 
 const router: Router = express.Router();
 
 router.get("/series", getSeries);
-router.get("/series/:title", bodyParser.json(), getSeriesByName);
+router.get("/series/:seriesId", getGamesBySeriesId);
+router.get("/seriesName/:title", getSeriesByName);
 router.post("/series", createSeries);
 
 export default router;

@@ -11,7 +11,7 @@ export interface IGame extends Document {
   developer: string;
   publisher: string;
   description: string;
-  rating: string;
+  rating: number;
   tagArray: string[];
   seriesId: Schema.Types.ObjectId;
   imageUrl: string;
@@ -26,7 +26,7 @@ const gameSchema: Schema = new Schema<IGame>(
     developer: { type: String, required: true },
     publisher: { type: String, required: true },
     description: { type: String, required: true },
-    rating: { type: String, required: true },
+    rating: { type: Number, required: true },
     tagArray: { type: [String], required: false, default: [] },
     seriesId: { type: Schema.Types.ObjectId, ref: "Series" },
     imageUrl: { type: String, required: true, default: "" },

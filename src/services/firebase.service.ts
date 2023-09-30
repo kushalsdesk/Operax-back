@@ -43,9 +43,13 @@ if (!storage) {
 }
 
 //handling the Needed Firebase Associated Function Here
-export const upload_Img = async (file: Express.Multer.File, name: string) => {
+export const upload_Img = async (
+  file: Express.Multer.File,
+  name: string,
+  seriesName: string
+) => {
   //Creating a storage Reference
-  const storageRef = ref(storage, `files/${name}_${Date.now()}`);
+  const storageRef = ref(storage, `files/${seriesName}/${name}_${Date.now()}`);
 
   const metadata = {
     contentType: file.mimetype,

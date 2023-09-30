@@ -19,9 +19,9 @@ export const getGames = async (
 export const createGames = async (
   req: Request,
   res: Response
-): Promise<void> => {
+): Promise<Response> => {
   try {
-    const {
+    let {
       title,
       genre,
       platform,
@@ -30,10 +30,50 @@ export const createGames = async (
       publisher,
       description,
       rating,
-      tagString,
+      tags,
       seriesName,
+      imageUrl,
     } = req.body;
+    if (req.file) {
+      const file = req.file;
+      imageUrl = await upload_Img(file, title, seriesName);
+    }
+
+    const seriesId = await Series.findOne({ title: seriesName }, { _id: 1 });
+    if (!seriesId) {
+      return res.status(400).send({ message: "Series not found" });
+    }
+
+    const tagsString = tags;
+    const tagArray = tagsString.split(",").map((tag: string) => tag.trim());
+
+    const newGame = new Game({
+      title,
+      genre,
+      platform,
+      releaseYear,
+      developer,
+      publisher,
+      description,
+      rating,
+      imageUrl,
+      tagArray,
+      seriesId,
+    });
+
+    const savedGame: IGame = await newGame.save();
+
+    await Series.findByIdAndUpdate(
+      seriesId,
+      { $push: { games: savedGame._id } },
+      { new: true }
+    );
+    return res.status(201).send(savedGame);
   } catch (err) {
-    console.log("Error while creating games", err.message);
+    return res.status(500).send({
+      success: false,
+      message: err.message,
+      error: "Some Internal Error",
+    });
   }
 };

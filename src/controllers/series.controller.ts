@@ -9,7 +9,11 @@ export const getSeries = async (req: Request, res: Response): Promise<void> => {
     const series: ISeries[] = await Series.find({}).exec();
     res.status(200).send({ success: true, message: "Series Found", series });
   } catch (err) {
-    console.log("Error getting series", err.message);
+    res.status(500).send({
+      success: false,
+      message: err.message,
+      error: "Some Internal Error Retrieving Series",
+    });
   }
 };
 
@@ -24,15 +28,18 @@ export const createSeries = async (
     const savedSeries = await newSeries.save();
 
     return res.status(201).json(savedSeries);
-  } catch (error) {
-    console.log("Error while Creating the Series", error.message);
+  } catch (err) {
+    return res.status(500).send({
+      success: false,
+      message: err.message,
+      error: "Some Internal Error While Creating Series",
+    });
   }
 };
 
 export const getSeriesByName = async (req: Request, res: Response) => {
   try {
     const { title } = req.params;
-    console.log(title);
 
     // Find the series by title in the MongoDB collection
     const series = await Series.findOne({ title }).exec();
@@ -51,10 +58,10 @@ export const getSeriesByName = async (req: Request, res: Response) => {
       series,
     });
   } catch (err) {
-    console.error("Error while retrieving series", err.message);
-    res.status(500).json({
+    return res.status(500).send({
       success: false,
-      message: "Error while retrieving series",
+      message: err.message,
+      error: "Internal Error while Retieving Series by Name",
     });
   }
 };
@@ -87,6 +94,10 @@ export const getGamesBySeriesId = async (
       games,
     });
   } catch (err) {
-    console.log("Error while retrieving games", err.message);
+    return res.status(500).send({
+      success: false,
+      message: err.message,
+      error: "Some Internal Error while retrieving Games by SeriesID",
+    });
   }
 };

@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import { connectToDB } from "./services/mongodb.service";
 import seriesRoutes from "./routes/series.route";
 import gameRoutes from "./routes/game.route";
+import userRoutes from "./routes/user.route";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 //Routes
 app.use("/api", seriesRoutes);
 app.use("/api", gameRoutes);
+app.use("/api", userRoutes);
 
 //Server Initialization
 const PORT = process.env.PORT;

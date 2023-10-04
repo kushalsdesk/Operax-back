@@ -2,6 +2,34 @@ import { Request, Response, NextFunction } from "express";
 import User, { IUser } from "../models/user.model";
 import Games from "../models/game.model";
 
+export const getUserByEmail = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { email } = req.params;
+    const userExists: IUser = await User.findOne({ email }).exec();
+    if (!userExists) {
+      return res.status(404).send({
+        success: false,
+        messaage: "No User Found",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Found User",
+      photoUrl: userExists.photoURL,
+    });
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: err.message,
+      error: "Some Internal Error while getUserByEmail",
+    });
+  }
+};
+
 export const createUser = async (
   req: Request,
   res: Response
